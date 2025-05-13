@@ -2,61 +2,53 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>تأثيرات متقدمة على الزر</title>
+  <title>حالة الطقس</title>
   <style>
     body {
-      /* تدرج لوني للخلفية */
-      background: linear-gradient(135deg, #1abc9c, #3498db);
-      color: #ffffff;
-      font-family: 'Arial', sans-serif;
+      font-family: sans-serif;
       text-align: center;
       padding: 50px;
-      transition: background 1s ease;
+      background: #e0f7fa;
     }
-
-    h1 {
-      color: #f1c40f;
-      animation: fadeIn 2s ease-in-out;
-    }
-
-    button {
-      padding: 15px 30px;
-      font-size: 18px;
-      background: linear-gradient(45deg, #e67e22, #d35400);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    }
-
-    button:hover {
-      transform: scale(1.1); /* تكبير بسيط عند المرور */
-      background: linear-gradient(45deg, #d35400, #e67e22);
-    }
-
-    button:active {
-      transform: scale(0.95); /* تصغير بسيط عند الضغط */
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    }
-
-    /* حركة العنوان */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-30px); }
-      to   { opacity: 1; transform: translateY(0); }
+    #weather {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      display: inline-block;
     }
   </style>
 </head>
 <body>
-  <h1>🎨 تأثيرات متقدمة</h1>
-  <button onclick="afficherMessage()">✨ اضغطني</button>
+
+  <h1>🌤️ حالة الطقس في مدينة</h1>
+  <input type="text" id="city" placeholder="أدخل اسم المدينة" />
+  <button onclick="getWeather()">جلب الطقس</button>
+
+  <div id="weather"></div>
 
   <script>
-    function afficherMessage() {
-      alert("🚀 لقد ضغطت على الزر مع تأثيرات جميلة!");
-      console.log("✨ الزر تم الضغط عليه مع تأثيرات.");
+    async function getWeather() {
+      const city = document.getElementById("city").value;
+      const apiKey = "YOUR_API_KEY"; // ضع هنا مفتاحك الخاص
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=ar`;
+
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (data.cod === 200) {
+        document.getElementById("weather").innerHTML = `
+          <h2>الطقس في ${data.name}</h2>
+          <p>🌡️ درجة الحرارة: ${data.main.temp}°C</p>
+          <p>🌬️ الرياح: ${data.wind.speed} م/ث</p>
+          <p>☁️ الوصف: ${data.weather[0].description}</p>
+        `;
+      } else {
+        document.getElementById("weather").innerHTML = "<p>لم يتم العثور على المدينة.</p>";
+      }
     }
   </script>
+
 </body>
 </html>
+
